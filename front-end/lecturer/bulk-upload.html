@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulk Upload - Lecturer Result Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../src/output.css">
+    <style>
+        .sidebar-transition {
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .card-hover {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .drop-zone {
+            transition: all 0.3s ease;
+        }
+        
+        .drop-zone.dragover {
+            background-color: #f0fdf4;
+            border-color: #16a34a;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform -translate-x-full sidebar-transition lg:translate-x-0 lg:static lg:inset-0">
+        <div class="flex items-center justify-center h-16 px-4 bg-gradient-to-r from-green-600 to-teal-600">
+            <h1 class="text-xl font-bold text-white">Lecturer Portal</h1>
+        </div>
+        
+        <nav class="mt-8">
+            <div class="px-4 space-y-2">
+                <a href="dashboard.html" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="students.html" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    Students
+                </a>
+                <a href="submit-result.html" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                    Submit Result
+                </a>
+                <a href="bulk-upload.html" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg bg-green-50 text-green-700">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                    </svg>
+                    Bulk Upload
+                </a>
+            </div>
+        </nav>
+        
+        <!-- User Profile -->
+        <div class="absolute bottom-0 left-0 right-0 p-4 border-t">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-8 h-8 bg-gradient-to-r from-green-600 to-teal-600 rounded-full flex items-center justify-center">
+                        <span class="text-white text-sm font-medium" id="user-initials">L</span>
+                    </div>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-700" id="user-name">Lecturer</p>
+                    <p class="text-xs text-gray-500" id="user-email">lecturer@example.com</p>
+                </div>
+            </div>
+            <button onclick="auth.logout()" class="mt-3 w-full flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+                Logout
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="lg:pl-64">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b">
+            <div class="flex items-center justify-between px-4 py-4">
+                <div class="flex items-center">
+                    <button id="menu-toggle" class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <h1 class="ml-4 text-2xl font-semibold text-gray-900">Bulk Upload Results</h1>
+                </div>
+            </div>
+        </header>
+
+        <!-- Bulk Upload Content -->
+        <main class="p-4 lg:p-8">
+            <div class="max-w-4xl mx-auto">
+                <!-- Upload Instructions -->
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-blue-800">Upload Instructions</h3>
+                            <div class="mt-2 text-sm text-blue-700">
+                                <ul class="list-disc list-inside space-y-1">
+                                    <li>Upload a CSV or Excel file containing student results</li>
+                                    <li>File should include columns: Student ID, Course Code, Grade, Score, Credits</li>
+                                    <li>Maximum file size: 10MB</li>
+                                    <li>Supported formats: .csv, .xlsx, .xls</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- File Upload Area -->
+                <div class="bg-white rounded-lg shadow mb-6">
+                    <div class="px-6 py-4 border-b">
+                        <h3 class="text-lg font-medium text-gray-900">Upload File</h3>
+                    </div>
+                    <div class="p-6">
+                        <div id="drop-zone" class="drop-zone border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 cursor-pointer">
+                            <div class="flex flex-col items-center">
+                                <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    </svg>
+                                </div>
+                                <p class="text-lg font-medium text-gray-900 mb-2">Drop your file here, or <span class="text-green-600 hover:text-green-700">browse</span></p>
+                                <p class="text-sm text-gray-500">CSV, Excel files up to 10MB</p>
+                            </div>
+                            <input type="file" id="file-input" class="hidden" accept=".csv,.xlsx,.xls">
+                        </div>
+
+                        <!-- File Info -->
+                        <div id="file-info" class="hidden mt-4 p-4 bg-gray-50 rounded-lg">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900" id="file-name">file.csv</p>
+                                        <p class="text-xs text-gray-500" id="file-size">2.3 MB</p>
+                                    </div>
+                                </div>
+                                <button onclick="removeFile()" class="text-red-600 hover:text-red-800">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Upload Button -->
+                        <div class="mt-6 flex justify-end">
+                            <button id="upload-btn" onclick="uploadFile()" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center" disabled>
+                                <span id="upload-text">Upload File</span>
+                                <svg id="upload-spinner" class="hidden animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Template Download -->
+                <div class="bg-white rounded-lg shadow mb-6">
+                    <div class="px-6 py-4 border-b">
+                        <h3 class="text-lg font-medium text-gray-900">Download Template</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-700">Download our Excel template to ensure your file is formatted correctly</p>
+                                <p class="text-xs text-gray-500 mt-1">Includes all required columns and sample data</p>
+                            </div>
+                            <button onclick="downloadTemplate()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                Download Template
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload History -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="px-6 py-4 border-b">
+                        <h3 class="text-lg font-medium text-gray-900">Upload History</h3>
+                    </div>
+                    <div class="p-6">
+                        <div id="upload-history" class="space-y-4">
+                            <!-- Upload history will be loaded here -->
+                            <div class="text-center text-gray-500 py-8">
+                                <svg class="w-12 h-12 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                </svg>
+                                <p>No upload history</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/utils.js"></script>
+    <script>
+        let selectedFile = null;
+
+        // Check authentication
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!auth.isAuthenticated()) {
+                window.location.href = '../login.html';
+                return;
+            }
+
+            if (!auth.hasRole('lecturer')) {
+                auth.redirectByRole();
+                return;
+            }
+
+            // Initialize bulk upload
+            initializeBulkUpload();
+        });
+
+        // Initialize bulk upload
+        async function initializeBulkUpload() {
+            try {
+                // Load user data
+                const user = auth.getCurrentUser();
+                updateUserProfile(user);
+
+                // Load upload history
+                await loadUploadHistory();
+
+                // Setup file upload handlers
+                setupFileUpload();
+
+                // Setup mobile menu
+                setupMobileMenu();
+            } catch (error) {
+                console.error('Bulk upload initialization error:', error);
+                toastManager.error('Failed to initialize page');
+            }
+        }
+
+        // Update user profile
+        function updateUserProfile(user) {
+            const userName = user.name || user.email || 'Lecturer';
+            const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+
+            document.getElementById('user-name').textContent = userName;
+            document.getElementById('user-email').textContent = user.email;
+            document.getElementById('user-initials').textContent = initials;
+        }
+
+        // Setup file upload handlers
+        function setupFileUpload() {
+            const dropZone = document.getElementById('drop-zone');
+            const fileInput = document.getElementById('file-input');
+
+            // Click to browse
+            dropZone.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            // File selection
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    handleFileSelect(file);
+                }
+            });
+
+            // Drag and drop
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                
+                const file = e.dataTransfer.files[0];
+                if (file) {
+                    handleFileSelect(file);
+                }
+            });
+        }
+
+        // Handle file selection
+        function handleFileSelect(file) {
+            // Validate file type
+            const allowedTypes = ['text/csv', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+            const allowedExtensions = ['.csv', '.xlsx', '.xls'];
+            
+            const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+            
+            if (!allowedExtensions.includes(fileExtension)) {
+                toastManager.error('Please select a valid file (CSV, Excel)');
+                return;
+            }
+
+            // Validate file size (10MB)
+            const maxSize = 10 * 1024 * 1024;
+            if (file.size > maxSize) {
+                toastManager.error('File size must be less than 10MB');
+                return;
+            }
+
+            selectedFile = file;
+            updateFileInfo(file);
+        }
+
+        // Update file info display
+        function updateFileInfo(file) {
+            const fileInfo = document.getElementById('file-info');
+            const fileName = document.getElementById('file-name');
+            const fileSize = document.getElementById('file-size');
+            const uploadBtn = document.getElementById('upload-btn');
+
+            fileName.textContent = file.name;
+            fileSize.textContent = formatFileSize(file.size);
+            
+            fileInfo.classList.remove('hidden');
+            uploadBtn.disabled = false;
+        }
+
+        // Remove selected file
+        function removeFile() {
+            selectedFile = null;
+            
+            const fileInfo = document.getElementById('file-info');
+            const fileInput = document.getElementById('file-input');
+            const uploadBtn = document.getElementById('upload-btn');
+
+            fileInfo.classList.add('hidden');
+            fileInput.value = '';
+            uploadBtn.disabled = true;
+        }
+
+        // Upload file
+        async function uploadFile() {
+            if (!selectedFile) {
+                toastManager.error('Please select a file to upload');
+                return;
+            }
+
+            try {
+                // Show loading state
+                const uploadBtn = document.getElementById('upload-btn');
+                const uploadText = document.getElementById('upload-text');
+                const uploadSpinner = document.getElementById('upload-spinner');
+                
+                uploadBtn.disabled = true;
+                uploadText.textContent = 'Uploading...';
+                uploadSpinner.classList.remove('hidden');
+
+                // Create form data
+                const formData = new FormData();
+                formData.append('file', selectedFile);
+
+                // Upload file
+                const result = await api.upload('/lecturers/me/results/bulk', selectedFile);
+                
+                if (result) {
+                    toastManager.success('File uploaded successfully!');
+                    
+                    // Clear file selection
+                    removeFile();
+                    
+                    // Reload upload history
+                    await loadUploadHistory();
+                }
+
+            } catch (error) {
+                console.error('Error uploading file:', error);
+                toastManager.error('Failed to upload file');
+            } finally {
+                // Hide loading state
+                const uploadBtn = document.getElementById('upload-btn');
+                const uploadText = document.getElementById('upload-text');
+                const uploadSpinner = document.getElementById('upload-spinner');
+                
+                uploadBtn.disabled = false;
+                uploadText.textContent = 'Upload File';
+                uploadSpinner.classList.add('hidden');
+            }
+        }
+
+        // Download template
+        function downloadTemplate() {
+            // Create a sample CSV template
+            const template = 'Student ID,Course Code,Grade,Score,Credits,Session,Semester\n' +
+                            'AB123456,MTH101,A,85,3,2023/2024,First\n' +
+                            'AB123457,MTH101,B,72,3,2023/2024,First\n' +
+                            'AB123458,MTH101,A,91,3,2023/2024,First';
+
+            const blob = new Blob([template], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'results_template.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+
+            toastManager.info('Template downloaded successfully');
+        }
+
+        // Load upload history
+        async function loadUploadHistory() {
+            try {
+                const historyData = await api.get('/lecturers/me/uploads/history');
+                
+                updateUploadHistory(historyData);
+
+            } catch (error) {
+                console.error('Error loading upload history:', error);
+                // Don't show error for this, it's not critical
+            }
+        }
+
+        // Update upload history
+        function updateUploadHistory(history) {
+            const container = document.getElementById('upload-history');
+            
+            if (!history || history.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-gray-500 py-8">
+                        <svg class="w-12 h-12 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                        <p>No upload history</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = history.map(upload => `
+                <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                    <div>
+                        <p class="font-medium text-gray-900">${upload.filename}</p>
+                        <p class="text-sm text-gray-600">${upload.records_count} records processed</p>
+                        <p class="text-xs text-gray-500">Uploaded: ${formatDateTime(upload.created_at)}</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getUploadStatusColor(upload.status)}">
+                            ${upload.status}
+                        </span>
+                        <p class="text-xs text-gray-500 mt-1">${formatFileSize(upload.file_size)}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Get upload status color
+        function getUploadStatusColor(status) {
+            const colors = {
+                'completed': 'bg-green-100 text-green-800',
+                'processing': 'bg-blue-100 text-blue-800',
+                'failed': 'bg-red-100 text-red-800',
+                'partial': 'bg-yellow-100 text-yellow-800'
+            };
+            return colors[status] || 'bg-gray-100 text-gray-800';
+        }
+
+        // Setup mobile menu
+        function setupMobileMenu() {
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+                    sidebar.classList.add('-translate-x-full');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
