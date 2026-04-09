@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results - Student Result Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../src/output.css">
+    <style>
+        .sidebar-transition {
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .card-hover {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform -translate-x-full sidebar-transition lg:translate-x-0 lg:static lg:inset-0">
+        <div class="flex items-center justify-center h-16 px-4 bg-gradient-to-r from-blue-600 to-purple-600">
+            <h1 class="text-xl font-bold text-white">Student Portal</h1>
+        </div>
+        
+        <nav class="mt-8">
+            <div class="px-4 space-y-2">
+                <a href="dashboard.html" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="results.html" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg bg-blue-50 text-blue-700">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                    Results
+                </a>
+                <a href="gpa.html" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    GPA Calculator
+                </a>
+                <a href="transcript.html" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                    Transcript
+                </a>
+                <a href="settings.html" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572-1.065c-.426-1.756-2.924-1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    Settings
+                </a>
+            </div>
+        </nav>
+        
+        <!-- User Profile -->
+        <div class="absolute bottom-0 left-0 right-0 p-4 border-t">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                        <span class="text-white text-sm font-medium" id="user-initials">S</span>
+                    </div>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-700" id="user-name">Student</p>
+                    <p class="text-xs text-gray-500" id="user-email">student@example.com</p>
+                </div>
+            </div>
+            <button onclick="auth.logout()" class="mt-3 w-full flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+                Logout
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="lg:pl-64">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b">
+            <div class="flex items-center justify-between px-4 py-4">
+                <div class="flex items-center">
+                    <button id="menu-toggle" class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <h1 class="ml-4 text-2xl font-semibold text-gray-900">Academic Results</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="exportResults()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Export
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Results Content -->
+        <main class="p-4 lg:p-8">
+            <!-- Filters -->
+            <div class="bg-white rounded-lg shadow p-6 mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Semester</label>
+                        <select id="semester-filter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">All Semesters</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Academic Year</label>
+                        <select id="year-filter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">All Years</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Grade</label>
+                        <select id="grade-filter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">All Grades</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="F">F</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-4 flex justify-end">
+                    <button onclick="applyFilters()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Apply Filters
+                    </button>
+                    <button onclick="resetFilters()" class="ml-2 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
+                        Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Table -->
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+                <div class="px-6 py-4 border-b">
+                    <h3 class="text-lg font-medium text-gray-900">Course Results</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course Code</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course Name</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Credits</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Points</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Semester</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-table-body" class="bg-white divide-y divide-gray-200">
+                            <!-- Results will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Empty State -->
+                <div id="empty-state" class="hidden text-center py-12">
+                    <svg class="w-12 h-12 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                    <p class="text-gray-500">No results available</p>
+                </div>
+            </div>
+
+            <!-- Summary Statistics -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
+                <div class="bg-white rounded-lg shadow p-6 card-hover">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 bg-blue-100 rounded-lg p-3">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Total Courses</p>
+                            <p class="text-2xl font-semibold text-gray-900" id="total-courses">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-6 card-hover">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 bg-green-100 rounded-lg p-3">
+                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Total Credits</p>
+                            <p class="text-2xl font-semibold text-gray-900" id="total-credits">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-6 card-hover">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 bg-yellow-100 rounded-lg p-3">
+                            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Average Grade</p>
+                            <p class="text-2xl font-semibold text-gray-900" id="average-grade">-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-6 card-hover">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 bg-purple-100 rounded-lg p-3">
+                            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Total Points</p>
+                            <p class="text-2xl font-semibold text-gray-900" id="total-points">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/utils.js"></script>
+    <script>
+        // Check authentication (supports both real and demo login)
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check for demo login first
+            const demoToken = localStorage.getItem('access_token');
+            const userData = localStorage.getItem('user_data');
+            
+            // Allow access if demo login exists
+            if (demoToken && userData) {
+                // Demo login detected, proceed
+                initializeResults();
+                return;
+            }
+            
+            // Check real authentication
+            if (!auth.isAuthenticated()) {
+                window.location.href = '../login.html';
+                return;
+            }
+
+            if (!auth.hasRole('student')) {
+                auth.redirectByRole();
+                return;
+            }
+
+            // Initialize results page
+            initializeResults();
+        });
+
+        // Initialize results page
+        async function initializeResults() {
+            try {
+                // Load user data (supports both real and demo login)
+                let user;
+                const userData = localStorage.getItem('user_data');
+                
+                if (userData) {
+                    // Demo login user
+                    user = JSON.parse(userData);
+                } else {
+                    // Real login user
+                    user = auth.getCurrentUser();
+                }
+                updateUserProfile(user);
+
+                // Load results data
+                await loadResults();
+
+                // Setup mobile menu
+                setupMobileMenu();
+            } catch (error) {
+                console.error('Results initialization error:', error);
+                toastManager.error('Failed to load results');
+            }
+        }
+
+        // Update user profile
+        function updateUserProfile(user) {
+            const userName = user.name || user.email || 'Student';
+            const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+
+            document.getElementById('user-name').textContent = userName;
+            document.getElementById('user-email').textContent = user.email;
+            document.getElementById('user-initials').textContent = initials;
+        }
+
+        // Load results data
+        async function loadResults() {
+            try {
+                showLoading();
+
+                const resultsData = await api.get('/students/me/results');
+                
+                // Update table
+                updateResultsTable(resultsData);
+                
+                // Update statistics
+                updateStatistics(resultsData);
+                
+                // Populate filters
+                populateFilters(resultsData);
+
+            } catch (error) {
+                console.error('Error loading results:', error);
+                toastManager.error('Failed to load results');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Update results table
+        function updateResultsTable(results) {
+            const tbody = document.getElementById('results-table-body');
+            const emptyState = document.getElementById('empty-state');
+            
+            if (!results || results.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            
+            tbody.innerHTML = results.map(result => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${result.course_code}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${result.course_name}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${result.credits}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getGradeColor(result.grade)}">
+                            ${result.grade}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${result.grade_points || calculateGradePoints(result.grade, result.credits)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${result.semester}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatDate(result.created_at)}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Update statistics
+        function updateStatistics(results) {
+            if (!results || results.length === 0) {
+                document.getElementById('total-courses').textContent = '0';
+                document.getElementById('total-credits').textContent = '0';
+                document.getElementById('average-grade').textContent = '-';
+                document.getElementById('total-points').textContent = '0';
+                return;
+            }
+
+            const totalCourses = results.length;
+            const totalCredits = results.reduce((sum, r) => sum + (r.credits || 0), 0);
+            const totalPoints = results.reduce((sum, r) => sum + (r.grade_points || calculateGradePoints(r.grade, r.credits)), 0);
+            const averageGrade = calculateAverageGrade(results);
+
+            document.getElementById('total-courses').textContent = totalCourses;
+            document.getElementById('total-credits').textContent = totalCredits;
+            document.getElementById('average-grade').textContent = averageGrade;
+            document.getElementById('total-points').textContent = totalPoints.toFixed(2);
+        }
+
+        // Populate filters
+        function populateFilters(results) {
+            if (!results || results.length === 0) return;
+
+            const semesters = [...new Set(results.map(r => r.semester))].sort();
+            const years = [...new Set(results.map(r => new Date(r.created_at).getFullYear()))].sort();
+
+            const semesterFilter = document.getElementById('semester-filter');
+            const yearFilter = document.getElementById('year-filter');
+
+            semesterFilter.innerHTML = '<option value="">All Semesters</option>' + 
+                semesters.map(s => `<option value="${s}">${s}</option>`).join('');
+            
+            yearFilter.innerHTML = '<option value="">All Years</option>' + 
+                years.map(y => `<option value="${y}">${y}</option>`).join('');
+        }
+
+        // Calculate grade points
+        function calculateGradePoints(grade, credits) {
+            const gradeValues = { 'A': 4.0, 'B': 3.0, 'C': 2.0, 'D': 1.0, 'F': 0.0 };
+            return (gradeValues[grade] || 0) * (credits || 0);
+        }
+
+        // Calculate average grade
+        function calculateAverageGrade(results) {
+            if (!results || results.length === 0) return '-';
+            
+            const gradeValues = { 'A': 4.0, 'B': 3.0, 'C': 2.0, 'D': 1.0, 'F': 0.0 };
+            const totalValue = results.reduce((sum, r) => sum + (gradeValues[r.grade] || 0), 0);
+            const average = totalValue / results.length;
+            
+            return average.toFixed(2);
+        }
+
+        // Get grade color
+        function getGradeColor(grade) {
+            const colors = {
+                'A': 'bg-green-100 text-green-800',
+                'B': 'bg-blue-100 text-blue-800',
+                'C': 'bg-yellow-100 text-yellow-800',
+                'D': 'bg-orange-100 text-orange-800',
+                'F': 'bg-red-100 text-red-800'
+            };
+            return colors[grade] || 'bg-gray-100 text-gray-800';
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const semester = document.getElementById('semester-filter').value;
+            const year = document.getElementById('year-filter').value;
+            const grade = document.getElementById('grade-filter').value;
+            
+            loadFilteredResults(semester, year, grade);
+        }
+
+        // Load filtered results
+        async function loadFilteredResults(semester, year, grade) {
+            try {
+                showLoading();
+                
+                const queryParams = new URLSearchParams();
+                if (semester) queryParams.append('semester', semester);
+                if (year) queryParams.append('year', year);
+                if (grade) queryParams.append('grade', grade);
+                
+                const url = queryParams.toString() ? `/students/me/results?${queryParams}` : '/students/me/results';
+                const resultsData = await api.get(url);
+                
+                updateResultsTable(resultsData);
+                updateStatistics(resultsData);
+                
+            } catch (error) {
+                console.error('Error loading filtered results:', error);
+                toastManager.error('Failed to load filtered results');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Reset filters
+        function resetFilters() {
+            document.getElementById('semester-filter').value = '';
+            document.getElementById('year-filter').value = '';
+            document.getElementById('grade-filter').value = '';
+            
+            loadResults();
+        }
+
+        // Export results
+        function exportResults() {
+            toastManager.info('Export functionality will be implemented soon');
+        }
+
+        // Setup mobile menu
+        function setupMobileMenu() {
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+                    sidebar.classList.add('-translate-x-full');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

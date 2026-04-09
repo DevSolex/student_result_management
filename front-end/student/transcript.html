@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transcript - Student Result Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../src/output.css">
+    <style>
+        .sidebar-transition {
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .card-hover {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            
+            .print-only {
+                display: block !important;
+            }
+            
+            body {
+                background: white !important;
+            }
+            
+            .bg-white {
+                background: white !important;
+                box-shadow: none !important;
+            }
+        }
+        
+        .print-only {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform -translate-x-full sidebar-transition lg:translate-x-0 lg:static lg:inset-0 no-print">
+        <div class="flex items-center justify-center h-16 px-4 bg-gradient-to-r from-blue-600 to-purple-600">
+            <h1 class="text-xl font-bold text-white">Student Portal</h1>
+        </div>
+        
+        <nav class="mt-8">
+            <div class="px-4 space-y-2">
+                <a href="dashboard.html" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="results.html" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                    Results
+                </a>
+                <a href="gpa.html" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    GPA Calculator
+                </a>
+                <a href="transcript.html" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg bg-blue-50 text-blue-700">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                    Transcript
+                </a>
+                <a href="settings.html" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572-1.065c-.426-1.756-2.924-1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    Settings
+                </a>
+            </div>
+        </nav>
+        
+        <!-- User Profile -->
+        <div class="absolute bottom-0 left-0 right-0 p-4 border-t">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                        <span class="text-white text-sm font-medium" id="user-initials">S</span>
+                    </div>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-700" id="user-name">Student</p>
+                    <p class="text-xs text-gray-500" id="user-email">student@example.com</p>
+                </div>
+            </div>
+            <button onclick="auth.logout()" class="mt-3 w-full flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+                Logout
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="lg:pl-64">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b no-print">
+            <div class="flex items-center justify-between px-4 py-4">
+                <div class="flex items-center">
+                    <button id="menu-toggle" class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <h1 class="ml-4 text-2xl font-semibold text-gray-900">Academic Transcript</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="window.print()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center no-print">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                        </svg>
+                        Print
+                    </button>
+                    <button onclick="downloadTranscript()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center no-print">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Download
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Transcript Content -->
+        <main class="p-4 lg:p-8">
+            <!-- Transcript Header -->
+            <div class="bg-white rounded-lg shadow p-8 mb-6">
+                <!-- Institution Header -->
+                <div class="text-center mb-8">
+                    <div class="mb-4">
+                        <div class="w-20 h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <h1 class="text-2xl font-bold text-gray-900 mb-2">Student Result Management System</h1>
+                    <p class="text-gray-600">Official Academic Transcript</p>
+                    <div class="print-only mt-4">
+                        <p class="text-sm text-gray-500">Generated on: <span id="print-date"></span></p>
+                    </div>
+                </div>
+
+                <!-- Student Information -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Student Information</h3>
+                        <div class="space-y-2">
+                            <div class="flex">
+                                <span class="w-32 text-sm font-medium text-gray-600">Name:</span>
+                                <span class="text-sm text-gray-900" id="student-name">-</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 text-sm font-medium text-gray-600">Matric Number:</span>
+                                <span class="text-sm text-gray-900" id="student-matric">-</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 text-sm font-medium text-gray-600">Email:</span>
+                                <span class="text-sm text-gray-900" id="student-email">-</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 text-sm font-medium text-gray-600">Department:</span>
+                                <span class="text-sm text-gray-900" id="student-department">-</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 text-sm font-medium text-gray-600">Program:</span>
+                                <span class="text-sm text-gray-900" id="student-program">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Academic Summary</h3>
+                        <div class="space-y-2">
+                            <div class="flex">
+                                <span class="w-32 text-sm font-medium text-gray-600">Admission Date:</span>
+                                <span class="text-sm text-gray-900" id="admission-date">-</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 text-sm font-medium text-gray-600">Current Level:</span>
+                                <span class="text-sm text-gray-900" id="current-level">-</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 text-sm font-medium text-gray-600">Total Credits:</span>
+                                <span class="text-sm text-gray-900" id="total-credits">0</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 text-sm font-medium text-gray-600">CGPA:</span>
+                                <span class="text-sm text-gray-900" id="cgpa">0.00</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 text-sm font-medium text-gray-600">Academic Standing:</span>
+                                <span class="text-sm text-gray-900" id="academic-standing">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Academic Records -->
+            <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+                <div class="px-6 py-4 border-b">
+                    <h3 class="text-lg font-medium text-gray-900">Academic Records</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Session</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Semester</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course Code</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course Title</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Credits</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade Points</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transcript-table-body" class="bg-white divide-y divide-gray-200">
+                            <!-- Transcript data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Semester Summary -->
+            <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+                <div class="px-6 py-4 border-b">
+                    <h3 class="text-lg font-medium text-gray-900">Semester Summary</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Session</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Semester</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Courses</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Credits</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade Points</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">GPA</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CGPA</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Class</th>
+                            </tr>
+                        </thead>
+                        <tbody id="semester-summary-body" class="bg-white divide-y divide-gray-200">
+                            <!-- Semester summary will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Grade Point System</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="flex items-center">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 mr-2">A</span>
+                        <span class="text-sm text-gray-600">Excellent (4.00 - 5.00)</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mr-2">B</span>
+                        <span class="text-sm text-gray-600">Very Good (3.00 - 3.99)</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 mr-2">C</span>
+                        <span class="text-sm text-gray-600">Good (2.00 - 2.99)</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 mr-2">D</span>
+                        <span class="text-sm text-gray-600">Pass (1.00 - 1.99)</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 mr-2">F</span>
+                        <span class="text-sm text-gray-600">Fail (0.00 - 0.99)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="mt-8 text-center text-sm text-gray-500 print-only">
+                <p>This is an official transcript issued by the Student Result Management System.</p>
+                <p>For verification, please contact the registrar's office.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/utils.js"></script>
+    <script>
+        // Check authentication
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!auth.isAuthenticated()) {
+                window.location.href = '../login.html';
+                return;
+            }
+
+            if (!auth.hasRole('student')) {
+                auth.redirectByRole();
+                return;
+            }
+
+            // Initialize transcript
+            initializeTranscript();
+        });
+
+        // Initialize transcript
+        async function initializeTranscript() {
+            try {
+                // Load user data
+                const user = auth.getCurrentUser();
+                updateUserProfile(user);
+
+                // Load transcript data
+                await loadTranscriptData();
+
+                // Setup mobile menu
+                setupMobileMenu();
+
+                // Set print date
+                setPrintDate();
+            } catch (error) {
+                console.error('Transcript initialization error:', error);
+                toastManager.error('Failed to load transcript');
+            }
+        }
+
+        // Update user profile
+        function updateUserProfile(user) {
+            const userName = user.name || user.email || 'Student';
+            const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+
+            document.getElementById('user-name').textContent = userName;
+            document.getElementById('user-email').textContent = user.email;
+            document.getElementById('user-initials').textContent = initials;
+        }
+
+        // Load transcript data
+        async function loadTranscriptData() {
+            try {
+                showLoading();
+
+                // Get student data
+                const studentData = await api.get('/students/me');
+                
+                // Get transcript data
+                const transcriptData = await api.get('/students/me/transcript');
+                
+                // Get GPA data
+                const gpaData = await api.get('/students/me/gpa');
+
+                // Update student information
+                updateStudentInfo(studentData);
+                
+                // Update academic summary
+                updateAcademicSummary(studentData, gpaData);
+                
+                // Update transcript table
+                updateTranscriptTable(transcriptData);
+                
+                // Update semester summary
+                updateSemesterSummary(transcriptData);
+
+            } catch (error) {
+                console.error('Error loading transcript data:', error);
+                toastManager.error('Failed to load transcript');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Update student information
+        function updateStudentInfo(studentData) {
+            document.getElementById('student-name').textContent = studentData.name || '-';
+            document.getElementById('student-matric').textContent = studentData.matric_number || '-';
+            document.getElementById('student-email').textContent = studentData.email || '-';
+            document.getElementById('student-department').textContent = studentData.department || '-';
+            document.getElementById('student-program').textContent = studentData.program || '-';
+            document.getElementById('admission-date').textContent = formatDate(studentData.admission_date) || '-';
+            document.getElementById('current-level').textContent = studentData.current_level || '-';
+        }
+
+        // Update academic summary
+        function updateAcademicSummary(studentData, gpaData) {
+            document.getElementById('total-credits').textContent = gpaData.total_credits || 0;
+            document.getElementById('cgpa').textContent = formatGPA(gpaData.current_gpa || 0);
+            
+            const standing = getAcademicStanding(gpaData.current_gpa || 0);
+            document.getElementById('academic-standing').textContent = standing;
+        }
+
+        // Update transcript table
+        function updateTranscriptTable(transcriptData) {
+            const tbody = document.getElementById('transcript-table-body');
+            
+            if (!transcriptData || transcriptData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="px-6 py-4 text-center text-gray-500">No transcript data available</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = transcriptData.map(record => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.session || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.semester || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.course_code}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.course_title}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.credits}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getGradeColor(record.grade)}">
+                            ${record.grade}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatGPA(record.grade_points)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getCourseStatusColor(record.status)}">
+                            ${record.status || 'Completed'}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Update semester summary
+        function updateSemesterSummary(transcriptData) {
+            const tbody = document.getElementById('semester-summary-body');
+            
+            if (!transcriptData || transcriptData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="px-6 py-4 text-center text-gray-500">No semester summary available</td></tr>';
+                return;
+            }
+
+            // Group by semester
+            const semesterGroups = {};
+            transcriptData.forEach(record => {
+                const key = `${record.session || 'N/A'}-${record.semester || 'N/A'}`;
+                if (!semesterGroups[key]) {
+                    semesterGroups[key] = {
+                        session: record.session,
+                        semester: record.semester,
+                        courses: [],
+                        totalCredits: 0,
+                        totalPoints: 0
+                    };
+                }
+                semesterGroups[key].courses.push(record);
+                semesterGroups[key].totalCredits += record.credits || 0;
+                semesterGroups[key].totalPoints += record.grade_points || 0;
+            });
+
+            // Create summary rows
+            const summaryRows = Object.values(semesterGroups).map(semester => {
+                const gpa = semester.totalCredits > 0 ? semester.totalPoints / semester.totalCredits : 0;
+                const className = getClassName(gpa);
+                
+                return `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${semester.session}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${semester.semester}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${semester.courses.length}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${semester.totalCredits}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatGPA(semester.totalPoints)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatGPA(gpa)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatGPA(gpa)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getClassColor(className)}">
+                                ${className}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            tbody.innerHTML = summaryRows;
+        }
+
+        // Get academic standing
+        function getAcademicStanding(gpa) {
+            if (gpa >= 4.5) return 'First Class Honors';
+            if (gpa >= 3.5) return 'Second Class Upper';
+            if (gpa >= 2.5) return 'Second Class Lower';
+            if (gpa >= 1.5) return 'Third Class';
+            return 'Pass';
+        }
+
+        // Get grade color
+        function getGradeColor(grade) {
+            const colors = {
+                'A': 'bg-green-100 text-green-800',
+                'B': 'bg-blue-100 text-blue-800',
+                'C': 'bg-yellow-100 text-yellow-800',
+                'D': 'bg-orange-100 text-orange-800',
+                'F': 'bg-red-100 text-red-800'
+            };
+            return colors[grade] || 'bg-gray-100 text-gray-800';
+        }
+
+        // Get course status color
+        function getCourseStatusColor(status) {
+            const colors = {
+                'Completed': 'bg-green-100 text-green-800',
+                'In Progress': 'bg-blue-100 text-blue-800',
+                'Failed': 'bg-red-100 text-red-800'
+            };
+            return colors[status] || 'bg-gray-100 text-gray-800';
+        }
+
+        // Get class name based on GPA
+        function getClassName(gpa) {
+            if (gpa >= 4.5) return 'First Class';
+            if (gpa >= 3.5) return 'Second Class Upper';
+            if (gpa >= 2.5) return 'Second Class Lower';
+            if (gpa >= 1.5) return 'Third Class';
+            return 'Pass';
+        }
+
+        // Get class color
+        function getClassColor(className) {
+            const colors = {
+                'First Class': 'bg-green-100 text-green-800',
+                'Second Class Upper': 'bg-blue-100 text-blue-800',
+                'Second Class Lower': 'bg-yellow-100 text-yellow-800',
+                'Third Class': 'bg-orange-100 text-orange-800',
+                'Pass': 'bg-gray-100 text-gray-800'
+            };
+            return colors[className] || 'bg-gray-100 text-gray-800';
+        }
+
+        // Set print date
+        function setPrintDate() {
+            const printDate = document.getElementById('print-date');
+            if (printDate) {
+                printDate.textContent = new Date().toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            }
+        }
+
+        // Download transcript
+        function downloadTranscript() {
+            toastManager.info('Download functionality will be implemented soon');
+        }
+
+        // Setup mobile menu
+        function setupMobileMenu() {
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+                    sidebar.classList.add('-translate-x-full');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
