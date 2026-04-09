@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Result - Lecturer Result Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../src/output.css">
+    <style>
+        .sidebar-transition {
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .card-hover {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform -translate-x-full sidebar-transition lg:translate-x-0 lg:static lg:inset-0">
+        <div class="flex items-center justify-center h-16 px-4 bg-gradient-to-r from-green-600 to-teal-600">
+            <h1 class="text-xl font-bold text-white">Lecturer Portal</h1>
+        </div>
+        
+        <nav class="mt-8">
+            <div class="px-4 space-y-2">
+                <a href="dashboard.html" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="students.html" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    Students
+                </a>
+                <a href="submit-result.html" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg bg-green-50 text-green-700">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                    Submit Result
+                </a>
+                <a href="bulk-upload.html" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                    </svg>
+                    Bulk Upload
+                </a>
+            </div>
+        </nav>
+        
+        <!-- User Profile -->
+        <div class="absolute bottom-0 left-0 right-0 p-4 border-t">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-8 h-8 bg-gradient-to-r from-green-600 to-teal-600 rounded-full flex items-center justify-center">
+                        <span class="text-white text-sm font-medium" id="user-initials">L</span>
+                    </div>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-700" id="user-name">Lecturer</p>
+                    <p class="text-xs text-gray-500" id="user-email">lecturer@example.com</p>
+                </div>
+            </div>
+            <button onclick="auth.logout()" class="mt-3 w-full flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+                Logout
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="lg:pl-64">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b">
+            <div class="flex items-center justify-between px-4 py-4">
+                <div class="flex items-center">
+                    <button id="menu-toggle" class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <h1 class="ml-4 text-2xl font-semibold text-gray-900">Submit Result</h1>
+                </div>
+            </div>
+        </header>
+
+        <!-- Submit Result Content -->
+        <main class="p-4 lg:p-8">
+            <div class="max-w-4xl mx-auto">
+                <!-- Result Form -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="px-6 py-4 border-b">
+                        <h3 class="text-lg font-medium text-gray-900">Submit Student Result</h3>
+                    </div>
+                    <div class="p-6">
+                        <form id="result-form" class="space-y-6">
+                            <!-- Student Selection -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Select Student</label>
+                                <select id="student-select" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                                    <option value="">Select a student</option>
+                                </select>
+                            </div>
+
+                            <!-- Course Selection -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Select Course</label>
+                                <select id="course-select" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                                    <option value="">Select a course</option>
+                                </select>
+                            </div>
+
+                            <!-- Academic Session -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Academic Session</label>
+                                    <input type="text" id="academic-session" placeholder="e.g., 2023/2024" 
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Semester</label>
+                                    <select id="semester" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                                        <option value="">Select semester</option>
+                                        <option value="First">First Semester</option>
+                                        <option value="Second">Second Semester</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Result Details -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Grade</label>
+                                    <select id="grade" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                                        <option value="">Select grade</option>
+                                        <option value="A">A (Excellent)</option>
+                                        <option value="B">B (Very Good)</option>
+                                        <option value="C">C (Good)</option>
+                                        <option value="D">D (Pass)</option>
+                                        <option value="F">F (Fail)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Score</label>
+                                    <input type="number" id="score" min="0" max="100" placeholder="0-100" 
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Credits</label>
+                                    <input type="number" id="credits" min="1" max="10" placeholder="Credit units" 
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                                </div>
+                            </div>
+
+                            <!-- Remarks -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Remarks (Optional)</label>
+                                <textarea id="remarks" rows="3" placeholder="Additional comments about the student's performance" 
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="flex justify-end">
+                                <button type="submit" id="submit-btn" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center">
+                                    <span id="submit-text">Submit Result</span>
+                                    <svg id="submit-spinner" class="hidden animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Recent Submissions -->
+                <div class="mt-8 bg-white rounded-lg shadow">
+                    <div class="px-6 py-4 border-b">
+                        <h3 class="text-lg font-medium text-gray-900">Recent Submissions</h3>
+                    </div>
+                    <div class="p-6">
+                        <div id="recent-submissions" class="space-y-4">
+                            <!-- Recent submissions will be loaded here -->
+                            <div class="text-center text-gray-500 py-8">
+                                <svg class="w-12 h-12 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                </svg>
+                                <p>No recent submissions</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/utils.js"></script>
+    <script>
+        // Check authentication
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!auth.isAuthenticated()) {
+                window.location.href = '../login.html';
+                return;
+            }
+
+            if (!auth.hasRole('lecturer')) {
+                auth.redirectByRole();
+                return;
+            }
+
+            // Initialize submit result page
+            initializeSubmitResult();
+        });
+
+        // Initialize submit result page
+        async function initializeSubmitResult() {
+            try {
+                // Load user data
+                const user = auth.getCurrentUser();
+                updateUserProfile(user);
+
+                // Load form data
+                await loadFormData();
+
+                // Load recent submissions
+                await loadRecentSubmissions();
+
+                // Setup form handlers
+                setupFormHandlers();
+
+                // Setup mobile menu
+                setupMobileMenu();
+
+                // Check for URL parameters
+                checkURLParams();
+            } catch (error) {
+                console.error('Submit result initialization error:', error);
+                toastManager.error('Failed to initialize page');
+            }
+        }
+
+        // Update user profile
+        function updateUserProfile(user) {
+            const userName = user.name || user.email || 'Lecturer';
+            const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+
+            document.getElementById('user-name').textContent = userName;
+            document.getElementById('user-email').textContent = user.email;
+            document.getElementById('user-initials').textContent = initials;
+        }
+
+        // Load form data
+        async function loadFormData() {
+            try {
+                showLoading();
+
+                // Get students
+                const studentsData = await api.get('/lecturers/me/students');
+                
+                // Get courses
+                const coursesData = await api.get('/lecturers/me/courses');
+
+                // Populate student select
+                const studentSelect = document.getElementById('student-select');
+                studentSelect.innerHTML = '<option value="">Select a student</option>' + 
+                    studentsData.map(student => `
+                        <option value="${student.id}">${student.name} (${student.matric_number})</option>
+                    `).join('');
+
+                // Populate course select
+                const courseSelect = document.getElementById('course-select');
+                courseSelect.innerHTML = '<option value="">Select a course</option>' + 
+                    coursesData.map(course => `
+                        <option value="${course.id}">${course.code} - ${course.name}</option>
+                    `).join('');
+
+            } catch (error) {
+                console.error('Error loading form data:', error);
+                toastManager.error('Failed to load form data');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Load recent submissions
+        async function loadRecentSubmissions() {
+            try {
+                const submissionsData = await api.get('/lecturers/me/results/recent');
+                
+                updateRecentSubmissions(submissionsData);
+
+            } catch (error) {
+                console.error('Error loading recent submissions:', error);
+                // Don't show error for this, it's not critical
+            }
+        }
+
+        // Update recent submissions
+        function updateRecentSubmissions(submissions) {
+            const container = document.getElementById('recent-submissions');
+            
+            if (!submissions || submissions.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-gray-500 py-8">
+                        <svg class="w-12 h-12 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                        <p>No recent submissions</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = submissions.map(submission => `
+                <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                    <div>
+                        <p class="font-medium text-gray-900">${submission.student_name}</p>
+                        <p class="text-sm text-gray-600">${submission.course_code} - ${submission.course_name}</p>
+                        <p class="text-xs text-gray-500">Session: ${submission.session} | Semester: ${submission.semester}</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getGradeColor(submission.grade)}">
+                            ${submission.grade}
+                        </span>
+                        <p class="text-xs text-gray-500 mt-1">${formatDateTime(submission.created_at)}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Setup form handlers
+        function setupFormHandlers() {
+            const form = document.getElementById('result-form');
+            const gradeSelect = document.getElementById('grade');
+            const scoreInput = document.getElementById('score');
+
+            // Grade to score mapping
+            const gradeScoreMap = {
+                'A': 70,
+                'B': 60,
+                'C': 50,
+                'D': 45,
+                'F': 0
+            };
+
+            // Auto-fill score based on grade
+            gradeSelect.addEventListener('change', () => {
+                const grade = gradeSelect.value;
+                if (grade && gradeScoreMap[grade]) {
+                    scoreInput.value = gradeScoreMap[grade];
+                }
+            });
+
+            // Form submission
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await submitResult();
+            });
+        }
+
+        // Submit result
+        async function submitResult() {
+            try {
+                const formData = {
+                    student_id: document.getElementById('student-select').value,
+                    course_id: document.getElementById('course-select').value,
+                    session: document.getElementById('academic-session').value,
+                    semester: document.getElementById('semester').value,
+                    grade: document.getElementById('grade').value,
+                    score: parseInt(document.getElementById('score').value),
+                    credits: parseInt(document.getElementById('credits').value),
+                    remarks: document.getElementById('remarks').value
+                };
+
+                // Validate form data
+                if (!validateFormData(formData)) {
+                    return;
+                }
+
+                // Show loading state
+                const submitBtn = document.getElementById('submit-btn');
+                const submitText = document.getElementById('submit-text');
+                const submitSpinner = document.getElementById('submit-spinner');
+                
+                submitBtn.disabled = true;
+                submitText.textContent = 'Submitting...';
+                submitSpinner.classList.remove('hidden');
+
+                // Submit result
+                const result = await api.post('/lecturers/me/results', formData);
+                
+                if (result) {
+                    toastManager.success('Result submitted successfully!');
+                    
+                    // Clear form
+                    document.getElementById('result-form').reset();
+                    
+                    // Reload recent submissions
+                    await loadRecentSubmissions();
+                }
+
+            } catch (error) {
+                console.error('Error submitting result:', error);
+                toastManager.error('Failed to submit result');
+            } finally {
+                // Hide loading state
+                const submitBtn = document.getElementById('submit-btn');
+                const submitText = document.getElementById('submit-text');
+                const submitSpinner = document.getElementById('submit-spinner');
+                
+                submitBtn.disabled = false;
+                submitText.textContent = 'Submit Result';
+                submitSpinner.classList.add('hidden');
+            }
+        }
+
+        // Validate form data
+        function validateFormData(data) {
+            if (!data.student_id) {
+                toastManager.error('Please select a student');
+                return false;
+            }
+
+            if (!data.course_id) {
+                toastManager.error('Please select a course');
+                return false;
+            }
+
+            if (!data.session) {
+                toastManager.error('Please enter academic session');
+                return false;
+            }
+
+            if (!data.semester) {
+                toastManager.error('Please select semester');
+                return false;
+            }
+
+            if (!data.grade) {
+                toastManager.error('Please select a grade');
+                return false;
+            }
+
+            if (data.score < 0 || data.score > 100) {
+                toastManager.error('Score must be between 0 and 100');
+                return false;
+            }
+
+            if (data.credits < 1 || data.credits > 10) {
+                toastManager.error('Credits must be between 1 and 10');
+                return false;
+            }
+
+            return true;
+        }
+
+        // Get grade color
+        function getGradeColor(grade) {
+            const colors = {
+                'A': 'bg-green-100 text-green-800',
+                'B': 'bg-blue-100 text-blue-800',
+                'C': 'bg-yellow-100 text-yellow-800',
+                'D': 'bg-orange-100 text-orange-800',
+                'F': 'bg-red-100 text-red-800'
+            };
+            return colors[grade] || 'bg-gray-100 text-gray-800';
+        }
+
+        // Check URL parameters
+        function checkURLParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const studentId = urlParams.get('student');
+            
+            if (studentId) {
+                // Pre-select the student
+                const studentSelect = document.getElementById('student-select');
+                studentSelect.value = studentId;
+            }
+        }
+
+        // Setup mobile menu
+        function setupMobileMenu() {
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+                    sidebar.classList.add('-translate-x-full');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
